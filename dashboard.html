@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SkillSwap - Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-logo">🎓 SkillSwap</a>
+    <div>
+      <a href="profile.html" class="btn btn-secondary">Edit Profile</a>
+      <button onclick="window.handleLogout()" class="btn btn-danger">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Available Mentors</h2>
+    <div id="users-grid" class="grid">
+      <!-- Loaded dynamically -->
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script type="module">
+    import { auth, db } from "./app.js";
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const grid = document.getElementById("users-grid");
+        grid.innerHTML = "";
+
+        querySnapshot.forEach((docSnap) => {
+          if (docSnap.id === user.uid) return;
+
+          const data = docSnap.data();
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${data.name || "Anonymous Member"}</h3>
+            <p><strong>Teaches:</strong> ${data.teachSkill || "N/A"}</p>
+            <p><strong>Wants:</strong> ${data.learnSkill || "N/A"}</p>
+            <p><strong>Contact:</strong> ${data.contact || "Hidden"}</p>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1.25rem;"
+              onclick="window.sendSwapRequest('${docSnap.id}', '${data.name}', '${data.teachSkill}')">
+              Request Swap
+            </button>
+          `;
+          grid.appendChild(card);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

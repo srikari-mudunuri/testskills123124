@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SkillSwap - Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-logo">🎓 SkillSwap</a>
+    <button onclick="window.handleLogout()" class="btn btn-danger">Logout</button>
+  </nav>
+
+  <div class="container" style="max-width: 500px;">
+    <h2>Your Profile</h2>
+    <div class="card">
+      <label>Full Name</label>
+      <input type="text" id="name" class="input-field" placeholder="Jane Doe">
+
+      <label>Skill You Can Teach</label>
+      <input type="text" id="teach" class="input-field" placeholder="Calculus, Python, Piano...">
+
+      <label>Skill You Want to Learn</label>
+      <input type="text" id="learn" class="input-field" placeholder="Web Design, Spanish...">
+
+      <label>Contact Info (Discord ID or Phone)</label>
+      <input type="text" id="contact" class="input-field" placeholder="@username / 555-0199">
+
+      <button id="save-btn" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+        Save Profile
+      </button>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script type="module">
+    import { auth, db } from "./app.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("name").value = data.name || "";
+          document.getElementById("teach").value = data.teachSkill || "";
+          document.getElementById("learn").value = data.learnSkill || "";
+          document.getElementById("contact").value = data.contact || "";
+        }
+      }
+    });
+
+    document.getElementById("save-btn").onclick = () => {
+      window.saveProfile(
+        document.getElementById("name").value,
+        document.getElementById("teach").value,
+        document.getElementById("learn").value,
+        document.getElementById("contact").value
+      );
+    };
+  </script>
+</body>
+</html>

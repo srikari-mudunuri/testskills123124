@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SkillSwap - Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container" style="max-width: 400px; margin-top: 5rem;">
+    <div class="card">
+      <h2 style="text-align: center; color: #4f46e5;">🎓 SkillSwap</h2>
+      <p style="text-align: center; font-size: 0.9rem;">Trade knowledge with peers</p>
+      
+      <label>Email</label>
+      <input type="email" id="email" class="input-field" placeholder="you@example.com">
+      
+      <label>Password</label>
+      <input type="password" id="password" class="input-field" placeholder="••••••••">
+      
+      <button id="login-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Log In</button>
+      <button id="signup-btn" class="btn btn-secondary" style="width: 100%;">Create Account</button>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script type="module">
+    document.getElementById('login-btn').onclick = () => {
+      window.handleLogin(
+        document.getElementById('email').value,
+        document.getElementById('password').value
+      );
+    };
+    document.getElementById('signup-btn').onclick = () => {
+      window.handleSignUp(
+        document.getElementById('email').value,
+        document.getElementById('password').value
+      );
+    };
+  </script>
+</body>
+</html>
